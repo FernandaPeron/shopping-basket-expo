@@ -1,13 +1,32 @@
-import React from 'react';
-import { StatusBar, SafeAreaView } from 'react-native';
-import Basket from './src/screens/Basket';
+import React, { useCallback } from 'react';
+import { StatusBar, View } from 'react-native';
+import { useFonts, Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
+import * as SplashScreen from 'expo-splash-screen';
+
+import Basket from './src/screens/basket/Basket';
+
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+  const [font] = useFonts({
+    'MontserratRegular': Montserrat_400Regular,
+    'MontserratBold': Montserrat_700Bold,
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (font) {
+      await SplashScreen.hideAsync();
+    }
+  }, [font]);
+
+  if (!font) {
+    return null;
+  }
+
   return (
-    <SafeAreaView>
-      <StatusBar style="auto"/>
+    <View onLayout={onLayoutRootView}>
+      <StatusBar/>
       <Basket/>
-    </SafeAreaView>
+    </View>
   );
 }
-
